@@ -16,6 +16,6 @@ export class User {
     })
     email: string;
 
-    @Column()
+    @Column() 
     password: string;
 }
