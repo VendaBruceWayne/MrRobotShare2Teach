@@ -7,16 +7,22 @@ import bcryptjs from "bcryptjs";
 export const Users = async (req: Request, res: Response) => {
     try {
         const repository = getRepository(User);
-        const users = await repository.find();
-        const result = users.map(u => {
-            const { password, ...data } = u;
-            return data;
+        const users = await repository.find({
+            relations: ['role']
         });
+
+        const result = users.map(u => {
+            const { password, role, ...data } = u;
+            const roleName = role ? role.name : null;
+            return { ...data, role: roleName };
+        });
+
         res.status(200).send(result); 
     } catch (error) {
         res.status(500).send({ message: "Error fetching users", error: error.message });
     }
 };
+
 
 // Create a new user with a hashed password
 export const CreateUser = async (req: Request, res: Response) => {
@@ -27,6 +33,9 @@ export const CreateUser = async (req: Request, res: Response) => {
         const user = await repository.save({
             ...body,
             password: hashedPassword,
+            role: {
+                id: role_id,
+            },
         });
         res.status(201).send(user);  
     } catch (error) {
@@ -41,19 +50,22 @@ export const GetUser = async (req: Request, res: Response) => {
         const userId = parseInt(req.params.id, 10);
 
         const user = await repository.findOne({
-            where: { id: userId }
+            where: { id: userId },
+            relations: ['role'],
         });
 
         if (user) {
-            const { password, ...data } = user;
-            res.status(200).send(data);  
+            const { password, role, ...data } = user;
+            const roleName = role ? role.name : null;
+            res.status(200).send({ ...data, role: roleName });
         } else {
-            res.status(404).send({ message: "User not found" });  
+            res.status(404).send({ message: "User not found" });
         }
     } catch (error) {
         res.status(500).send({ message: "Error fetching user", error: error.message });
     }
 };
+
 
 // Update user information excluding password
 export const UpdateUser = async (req: Request, res: Response) => {
@@ -73,7 +85,11 @@ export const UpdateUser = async (req: Request, res: Response) => {
         await repository.update(userId, body);
 
         const updatedUser = await repository.findOne({
-            where: { id: userId }
+            where: { id: userId },
+            ...body,
+            role: {
+                id: role_id,
+            }
         });
 
         if (updatedUser) {
