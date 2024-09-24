@@ -1,30 +1,23 @@
 import express, { Request, Response } from 'express';
-import multer from 'multer';
-import path from 'path';
-import conversionRoutes from './routes/conversionRoutes';
+import bodyParser from 'body-parser';
+import sequelize  from './config/database';  // Assuming this file exports your Sequelize connection
+import  faqRoutes  from './routes/faqRoutes';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Configure Multer for file uploads, specifying the destination and naming convention for uploaded files
-const storage = multer.diskStorage({
-  destination: './uploads/', // Folder where uploaded files will be stored
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`); // Rename file with timestamp to avoid name conflicts
-  },
-});
+// Middleware
+app.use(bodyParser.json());
 
-const upload = multer({ storage });
+// Routes
+app.use('/faqs', faqRoutes);
 
-// Middleware to handle JSON request bodies
-app.use(express.json());
+// Database Connection
+sequelize.sync()
+  .then(() => console.log('Database synced!'))
+  .catch(err => console.log('Error syncing database: ', err));
 
-// Use the conversion routes and pass the multer upload object for file handling
-app.use('/api/convert', conversionRoutes(upload));
-
-// Start the server and listen on a specific port
+// Starting the server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-export default app;
