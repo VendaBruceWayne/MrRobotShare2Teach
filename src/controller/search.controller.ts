@@ -1,38 +1,26 @@
+// src/controllers/SearchController.ts
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { Resource } from "../entity/resource.entity";
 
-export class ResourceController {
-  static async searchResources(req: Request, res: Response) {
-    try {
-      const { query, category } = req.query;
-      
-      // Get the Resource repository
-      const resourceRepository = getRepository(Resource);
+export class SearchController {
+    async searchResources(req: Request, res: Response): Promise<Response> {
+        const { query } = req.query;
 
-      // Build the query dynamically
-      let searchConditions: any = [];
-      if (query) {
-        searchConditions = [
-          { title: query },
-          { description: query }
-        ];
-      }
+        if (!query) {
+            return res.status(400).json({ message: 'Query parameter is required' });
+        }
 
-      // Add category condition if present
-      if (category) {
-        searchConditions.push({ category: category });
-      }
+        const resourceRepository = getRepository(Resource);
+        try {
+            const resources = await resourceRepository.createQueryBuilder('resource')
+                .where('resource.title LIKE :query OR resource.description LIKE :query', { query: `%${query}%` })
+                .getMany();
 
-      const resources = await resourceRepository.find({
-        where: searchConditions,
-        order: { uploadDate: 'DESC' }, // Order by latest uploaded
-      });
-
-      return res.json(resources);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Error fetching resources' });
+            return res.json(resources);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'An error occurred while searching for resources' });
+        }
     }
-  }
 }
