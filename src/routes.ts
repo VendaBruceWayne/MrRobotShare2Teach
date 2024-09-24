@@ -6,6 +6,7 @@ import { Permissions } from "./controller/permission.controller";
 import { CreateRole, DeleteRole, GetRole, Roles, UpdateRole } from "./controller/role.controller";
 import { CreateResource, DeleteResource, GetResource, Resources, UpdateResource } from "./controller/resource.controller";
 import { tagResource,createTag, getResourcesByTag } from "./controller/tag.controller"; 
+import { rateResource, getResourceRatings } from "./controller/rate.controller";
 
 
 export const routes = (router: Router) => {
@@ -48,6 +49,9 @@ export const routes = (router: Router) => {
     router.get('/api/tags/:tagId/resources', AuthMiddleware, getResourcesByTag);
 
     //Rating 
+    
+    router.post("/rate", rateResource);
+    router.get("/resource/:id/ratings", getResourceRatings);
   
 
     

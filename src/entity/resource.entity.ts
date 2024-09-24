@@ -28,5 +28,7 @@ export class Resource {
      @ManyToMany(() => Tag, tag => tag.resources)
      @JoinTable() // Creates a join table to manage the relationship
      tags: Tag[];
+     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+     uploadDate: Date;
     
 }
