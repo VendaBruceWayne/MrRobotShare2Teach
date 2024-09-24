@@ -2,9 +2,9 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
   tableName: 'faqs',
-  timestamps: true, // If you want createdAt and updatedAt columns
+  timestamps: true,
 })
-export class Faq extends Model<Faq> {
+export class Faq extends Model {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -13,13 +13,13 @@ export class Faq extends Model<Faq> {
   id!: number;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(255),
     allowNull: false,
   })
   question!: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(255),
     allowNull: false,
   })
   answer!: string;

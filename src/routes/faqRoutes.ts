@@ -6,11 +6,11 @@ import { createFAQ, getFAQById, getAllFAQs, updateFAQ, deleteFAQ } from '../cont
 const router = Router();
 
 // Define routes for FAQs
-router.post('/', createFAQ);
-router.get('/:id', getFAQById);
-router.get('/', getAllFAQs);
-router.put('/:id', updateFAQ);
-router.delete('/:id', deleteFAQ);
+router.post('/faqs', createFAQ);
+router.get('/faqs/:id', getFAQById);
+router.get('/faqs', getAllFAQs);
+router.put('/faqs/:id', updateFAQ);
+router.delete('/faqs/:id', deleteFAQ);
 
 export default router;
 

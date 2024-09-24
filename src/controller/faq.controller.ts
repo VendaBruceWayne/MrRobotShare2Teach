@@ -2,6 +2,11 @@
 import { Request, Response } from 'express';
 import { Faq } from '../models/Faq';
 
+interface FaqBody {
+  question: string;
+  answer: string;
+}
+
 // Create FAQ
 export const createFAQ = async (req: Request, res: Response) => {
   try {

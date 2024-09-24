@@ -8,8 +8,20 @@
       "esModuleInterop": true,              
       "moduleResolution": "node",           
       "skipLibCheck": true,                 
-      "forceConsistentCasingInFileNames": true  
+      "forceConsistentCasingInFileNames": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "noImplicitAny": true                  // Set this to true for better type safety
     },
-    "include": ["src"],                     
-    "exclude": ["node_modules", "dist"]     
+    "include": ["src", "app.ts"],                     // Include the entire src folder
+    "exclude": ["node_modules", "dist"],
+    
+    "development": {
+      "username": "root",
+      "password": "password",
+      "database": "faq_db",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
   }
+
