@@ -5,10 +5,16 @@ import bcryptjs from "bcryptjs";
 
 // Fetch all users and exclude passwords
 export const Users = async (req: Request, res: Response) => {
+    const take = 15;
+    const page = parseInt(req.query.page as string || "1");
+
     try {
         const repository = getRepository(User);
-        const users = await repository.find({
-            relations: ['role']
+
+        const [users, total] = await repository.findAndCount({
+            relations: ['role'],
+            take,
+            skip: (page - 1) * take
         });
 
         const result = users.map(u => {
@@ -17,11 +23,19 @@ export const Users = async (req: Request, res: Response) => {
             return { ...data, role: roleName };
         });
 
-        res.status(200).send(result); 
+        res.send({
+            data: result,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / take)
+            }
+        });
     } catch (error) {
         res.status(500).send({ message: "Error fetching users", error: error.message });
     }
 };
+
 
 
 // Create a new user with a hashed password

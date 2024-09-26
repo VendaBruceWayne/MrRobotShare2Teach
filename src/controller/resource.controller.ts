@@ -4,10 +4,27 @@ import { Resource } from "../entity/resource.entity";
 
 // Fetch all resources
 export const Resources = async (req: Request, res: Response) => {
+    const take = 15;
+    const page = parseInt(req.query.page as string || "1");
+
     try {
         const repository = getRepository(Resource);
-        const resources = await repository.find();
-        res.status(200).json(resources);
+
+        const [data, total]= await repository.findAndCount({
+            take, 
+            skip: (page -1) * take
+        })
+
+        res.send({
+            data,
+            meta:{
+                total,
+                page,
+                last_page: Math.ceil(total/take)
+            }
+        })
+
+        
     } catch (error) {
         res.status(500).json({ message: "Error fetching resources", error: error.message });
     }

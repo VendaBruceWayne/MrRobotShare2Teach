@@ -1,10 +1,15 @@
 import { Router } from "express";
+import multer from "multer";
 import { AuthonticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from "./controller/auth.controller";
 import { AuthMiddleware } from "./middleware/auth.middleware";
 import { CreateUser, DeleteUser, GetUser, UpdateUser, Users } from "./controller/user.controller";
 import { Permissions } from "./controller/permission.controller";
 import { CreateRole, DeleteRole, GetRole, Roles, UpdateRole } from "./controller/role.controller";
 import { CreateResource, DeleteResource, GetResource, Resources, UpdateResource } from "./controller/resource.controller";
+import { Upload } from "./controller/pdf.controller";
+import {extname} from "path";
+import express from "express";
+
 
 export const routes = (router: Router) => {
 
@@ -38,6 +43,11 @@ export const routes = (router: Router) => {
     router.get('/api/resources/:id', AuthMiddleware, GetResource); 
     router.put('/api/resources/:id', AuthMiddleware, UpdateResource); 
     router.delete ('/api/resources/:id', AuthMiddleware, DeleteResource); 
+
+    
+    router.post('/api/upload', AuthMiddleware, Upload);
+    router.use('/api/uploads', express.static('./uploads'));
+
     
     return router;
 };
