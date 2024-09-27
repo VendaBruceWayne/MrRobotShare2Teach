@@ -1,10 +1,10 @@
 {
     "type": "mysql",
-    "host": "localhost",
+    "host": "sharetoteachdb.cv86oca2m5zp.eu-north-1.rds.amazonaws.com",
     "port": 3306,
-    "username": "root",
-    "password": "Tambani@0715", 
-    "database": "node_admin",
+    "username": "moderator",
+    "password": "Mutshidzi36324523", 
+    "database": "sharetoteachdb",
     "entities": [
         "src/entity/*.ts"
     ],

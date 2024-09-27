@@ -4,10 +4,10 @@ import { Permission } from "./permission.entity";
 @Entity({ name: 'roles' })
 export class Role {
     @PrimaryGeneratedColumn({ type: 'int' })
-    id: number;
+    id!: number; // Non-null assertion added here
 
     @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
-    name: string;
+    name!: string; // Non-null assertion added here
 
     @ManyToMany(() => Permission, { eager: true, cascade: true })
     @JoinTable({
@@ -21,5 +21,5 @@ export class Role {
             referencedColumnName: 'id'
         }
     })
-    permissions: Permission[];
+    permissions!: Permission[]; // Removed the array initialization
 }

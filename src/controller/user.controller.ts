@@ -32,11 +32,13 @@ export const Users = async (req: Request, res: Response) => {
             }
         });
     } catch (error) {
-        res.status(500).send({ message: "Error fetching users", error: error.message });
+        console.error("Error fetching users:", error);
+        res.status(500).send({
+            message: "An error occurred while fetching users",
+            error: (error as Error).message
+        });
     }
 };
-
-
 
 // Create a new user with a hashed password
 export const CreateUser = async (req: Request, res: Response) => {
@@ -51,9 +53,13 @@ export const CreateUser = async (req: Request, res: Response) => {
                 id: role_id,
             },
         });
-        res.status(201).send(user);  
+        res.status(201).send(user);
     } catch (error) {
-        res.status(500).send({ message: "Error creating user", error: error.message });
+        console.error("Error creating user:", error);
+        res.status(500).send({
+            message: "An error occurred while creating the user",
+            error: (error as Error).message
+        });
     }
 };
 
@@ -76,10 +82,13 @@ export const GetUser = async (req: Request, res: Response) => {
             res.status(404).send({ message: "User not found" });
         }
     } catch (error) {
-        res.status(500).send({ message: "Error fetching user", error: error.message });
+        console.error("Error fetching user:", error);
+        res.status(500).send({
+            message: "An error occurred while fetching the user",
+            error: (error as Error).message
+        });
     }
 };
-
 
 // Update user information excluding password
 export const UpdateUser = async (req: Request, res: Response) => {
@@ -93,7 +102,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
         });
 
         if (!user) {
-            return res.status(404).send({ message: "User not found" });  
+            return res.status(404).send({ message: "User not found" });
         }
 
         await repository.update(userId, body);
@@ -108,10 +117,14 @@ export const UpdateUser = async (req: Request, res: Response) => {
 
         if (updatedUser) {
             const { password, ...data } = updatedUser;
-            return res.status(202).send(data);  
+            return res.status(202).send(data);
         }
     } catch (error) {
-        return res.status(500).send({ message: "Error updating user", error: error.message });
+        console.error("Error updating user:", error);
+        res.status(500).send({
+            message: "An error occurred while updating the user",
+            error: (error as Error).message
+        });
     }
 };
 
@@ -124,11 +137,15 @@ export const DeleteUser = async (req: Request, res: Response) => {
         const result = await repository.delete(userId);
 
         if (result.affected === 0) {
-            return res.status(404).send({ message: "User not found" });  
+            return res.status(404).send({ message: "User not found" });
         }
 
-        res.status(204).send(); 
+        res.status(204).send();
     } catch (error) {
-        res.status(500).send({ message: "Error deleting user", error: error.message });
+        console.error("Error deleting user:", error);
+        res.status(500).send({
+            message: "An error occurred while deleting the user",
+            error: (error as Error).message
+        });
     }
 };

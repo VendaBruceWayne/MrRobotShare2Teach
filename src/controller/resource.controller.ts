@@ -10,23 +10,26 @@ export const Resources = async (req: Request, res: Response) => {
     try {
         const repository = getRepository(Resource);
 
-        const [data, total]= await repository.findAndCount({
-            take, 
-            skip: (page -1) * take
-        })
+        const [data, total] = await repository.findAndCount({
+            take,
+            skip: (page - 1) * take
+        });
 
         res.send({
             data,
-            meta:{
+            meta: {
                 total,
                 page,
-                last_page: Math.ceil(total/take)
+                last_page: Math.ceil(total / take)
             }
-        })
+        });
 
-        
     } catch (error) {
-        res.status(500).json({ message: "Error fetching resources", error: error.message });
+        console.error("Error fetching resources:", error);
+        res.status(500).json({ 
+            message: "Error fetching resources", 
+            error: (error as Error).message 
+        });
     }
 };
 
@@ -37,7 +40,11 @@ export const CreateResource = async (req: Request, res: Response) => {
         const resource = await repository.save(req.body);
         res.status(201).json(resource);
     } catch (error) {
-        res.status(500).json({ message: "Error creating resource", error: error.message });
+        console.error("Error creating resource:", error);
+        res.status(500).json({ 
+            message: "Error creating resource", 
+            error: (error as Error).message 
+        });
     }
 };
 
@@ -63,7 +70,11 @@ export const GetResource = async (req: Request, res: Response) => {
             res.status(404).json({ message: "Resource not found" });
         }
     } catch (error) {
-        res.status(500).json({ message: "Error retrieving resource", error: error.message });
+        console.error("Error retrieving resource:", error);
+        res.status(500).json({ 
+            message: "Error retrieving resource", 
+            error: (error as Error).message 
+        });
     }
 };
 
@@ -85,7 +96,11 @@ export const UpdateResource = async (req: Request, res: Response) => {
         const updatedResource = await repository.findOne({ where: { id: resourceId } });
         res.status(202).json(updatedResource);
     } catch (error) {
-        res.status(500).json({ message: "Error updating resource", error: error.message });
+        console.error("Error updating resource:", error);
+        res.status(500).json({ 
+            message: "Error updating resource", 
+            error: (error as Error).message 
+        });
     }
 };
 
@@ -106,6 +121,11 @@ export const DeleteResource = async (req: Request, res: Response) => {
         await repository.delete(resourceId);
         res.status(204).send();
     } catch (error) {
-        res.status(500).json({ message: "Error deleting resource", error: error.message });
+        console.error("Error deleting resource:", error);
+        res.status(500).json({ 
+            message: "Error deleting resource", 
+            error: (error as Error).message 
+        });
     }
 };
+ 

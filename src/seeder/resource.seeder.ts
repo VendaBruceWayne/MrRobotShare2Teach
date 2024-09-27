@@ -19,7 +19,9 @@ createConnection().then(async connection => {
             await repository.save({
                 title: faker.lorem.words(2),
                 description: faker.lorem.words(20),
+                moderationStatus: "pending",
                 pdf: faker.image.url({ width: 200, height: 200 }),
+                moderationComments: faker.lorem.words(10),
                 user,
             });
 

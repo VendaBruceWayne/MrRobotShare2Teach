@@ -5,28 +5,26 @@ import { Resource } from "./resource.entity";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    first_name: string;
+    first_name!: string;
 
     @Column()
-    last_name: string;
+    last_name!: string;
 
     @Column({
         unique: true,
     })
-    email: string;
+    email!: string;
 
     @Column() 
-    password: string;
+    password!: string;
 
     @ManyToOne(() => Role)
     @JoinColumn({ name: 'role_id' })
-    role: Role;
+    role!: Role;
 
-    
     @OneToMany(() => Resource, resource => resource.user)
-    resources: Resource[];
-    
+    resources!: Resource[];
 }

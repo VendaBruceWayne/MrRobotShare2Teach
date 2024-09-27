@@ -29,6 +29,20 @@
             "username": "root",
             "password": "Tambani@0715",
             "connectionTimeout": 30
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "sharetoteachdb.cv86oca2m5zp.eu-north-1.rds.amazonaws.com",
+            "port": 3306,
+            "driver": "MySQL",
+            "username": "moderator",
+            "database": "sharetoteachdb",
+            "name": "MrRobotShare2Teach",
+            "askForPassword": true
         }
     ]
 }
