@@ -34,7 +34,7 @@
     "typescript-eslint": "^8.3.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.0.2",
+    "@faker-js/faker": "^9.0.3",
     "aws-sdk": "^2.1691.0",
     "bcryptjs": "^2.4.3",
     "child_process": "^1.0.2",
