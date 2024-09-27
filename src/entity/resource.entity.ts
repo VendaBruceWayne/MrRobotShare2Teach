@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, OneToMany, JoinTable } from 'typeorm';
 import { User } from './user.entity';
+import { Rating } from './rate.entity'; // Import the Rating entity
+import { Tag } from './tag.entity'; // Import the Tag entity
 
 @Entity()
 export class Resource {
@@ -27,4 +29,13 @@ export class Resource {
 
     @ManyToOne(() => User, { nullable: true })
     moderatedBy?: User; // The user who moderated the resource
+
+    // Add ratings relationship, allow nullable/empty array
+    @OneToMany(() => Rating, rating => rating.resource, { nullable: true })
+    ratings?: Rating[] | null; // Ratings can be null or an empty array
+
+    // Add tags relationship, allow nullable/empty array
+    @ManyToMany(() => Tag, tag => tag.resources, { nullable: true })
+    @JoinTable() // Required for ManyToMany relations
+    tags?: Tag[] | null; // Tags can be null or an empty array
 }

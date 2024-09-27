@@ -9,6 +9,7 @@ import {
 } from "./controller/auth.controller";
 import { AuthMiddleware } from "./middleware/auth.middleware";
 import { PermissionMiddleware } from "./middleware/permission.middleware"; // Ensure correct import
+import { createFAQ, getFAQById, getAllFAQs, updateFAQ, deleteFAQ } from './controller/faq.controller';
 
 import {
     CreateUser,
@@ -40,6 +41,10 @@ import {
     GetFileMetadata,
 } from "./controller/pdf.controller"; // Added GetFileMetadata route
 import express from "express";
+import { getAllDocuments, getDocumentById, getMostViewedDocuments, getLeastViewedDocuments, getMostBookmarkedDocuments, getLeastBookmarkedDocuments, getMostDownloadedDocuments, getLeastDownloadedDocuments } from "./controller/doc.controller";
+import { createView } from "./controller/view.controller";
+import { createBookmark } from "./controller/bookmark.controller";
+import { createDownload} from "./controller/download.controller";
 
 export const routes = (router: Router) => {
     // Auth routes
@@ -67,6 +72,22 @@ export const routes = (router: Router) => {
     router.put("/api/roles/:id", AuthMiddleware, PermissionMiddleware('edit_roles'), UpdateRole); // Update a role by ID
     router.delete("/api/roles/:id", AuthMiddleware, PermissionMiddleware('delete_roles'), DeleteRole); // Delete a role by ID
 
+      //GET functions fr documents
+      router.get('/documents', getAllDocuments);
+      router.get('/documents/:id', getDocumentById);
+      router.get('/documents/view/most', getMostViewedDocuments);
+      router.get('/documents/view/least', getLeastViewedDocuments);
+      router.get('/documents/bookmark/most', getMostBookmarkedDocuments);
+      router.get('/documents/bookmark/least', getLeastBookmarkedDocuments);
+      router.get('/documents/download/most', getMostDownloadedDocuments);
+      router.get('/documents/download/least', getLeastDownloadedDocuments);
+
+    // New POST functions to record user interactions
+    router.post('/documents/:id/view', AuthMiddleware, createView);  // Add a view to the document
+    router.post('/documents/:id/bookmark', AuthMiddleware, createBookmark);  // Bookmark a document
+    router.post('/documents/:id/download', AuthMiddleware, createDownload);  // Record a download for a document
+
+
     // Resources routes
     router.get("/api/resources", AuthMiddleware, PermissionMiddleware('view_resources'), Resources); // Get all resources
     router.post("/api/resources", AuthMiddleware, PermissionMiddleware('create_resources'), CreateResource); // Create a new resource
@@ -82,6 +103,16 @@ export const routes = (router: Router) => {
 
     // Serve uploaded files statically
     router.use("/api/uploads", express.static("./src/uploads")); // Serve files from the uploads directory
+
+
+    // Define routes for FAQs
+    router.post('/faqs', createFAQ);
+router.get('/faqs/:id', getFAQById);
+router.get('/faqs', getAllFAQs);
+router.put('/faqs/:id', updateFAQ);
+router.delete('/faqs/:id', deleteFAQ);
+
+
 
     return router;
 };
