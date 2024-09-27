@@ -1,3 +1,6 @@
+/*# License
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. See the [LICENSE](LICENSE) file for details
+*/
 import { Router } from "express";
 import {
     AuthenticatedUser,
@@ -45,6 +48,9 @@ import { getAllDocuments, getDocumentById, getMostViewedDocuments, getLeastViewe
 import { createView } from "./controller/view.controller";
 import { createBookmark } from "./controller/bookmark.controller";
 import { createDownload} from "./controller/download.controller";
+import { tagResource,createTag, getResourcesByTag } from "./controller/tag.controller"; 
+import { rateResource, getResourceRatings } from "./controller/rate.controller";
+import { SearchController } from './controller/search.controller';
 
 export const routes = (router: Router) => {
     // Auth routes
@@ -111,6 +117,21 @@ router.get('/faqs/:id', getFAQById);
 router.get('/faqs', getAllFAQs);
 router.put('/faqs/:id', updateFAQ);
 router.delete('/faqs/:id', deleteFAQ);
+
+ // Tag a resource
+ router.post('/api/resources/:resourceId/tags/:tagId', AuthMiddleware, tagResource);
+ router.post('/api/tags', AuthMiddleware, createTag);
+ router.get('/api/tags/:tagId/resources', AuthMiddleware, getResourcesByTag);
+
+ //Rating 
+ 
+ router.post("/rate", rateResource);
+ router.get("/resource/:id/ratings", getResourceRatings);
+
+ //Search
+ const searchController = new SearchController();
+ router.get('/search', searchController.searchResources.bind(searchController));
+
 
 
 

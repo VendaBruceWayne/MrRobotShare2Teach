@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+/*# License
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. See the [LICENSE](LICENSE) file for details
+*/import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import { getManager } from 'typeorm';
 import { User } from '../entity/user.entity';
