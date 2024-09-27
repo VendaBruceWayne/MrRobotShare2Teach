@@ -46,29 +46,36 @@ async function main() {
         const permissionRepository = connection.getRepository(Permission);
         const roleRepository = connection.getRepository(Role);
 
-        // Define permissions
+        // Define all possible permissions, including user-related permissions
         const perms = [
-            'doc_searching',
-            'doc_viewing',
-            'doc_contribution',
-            'doc_rating',
-            'frequently_asked_questions',
-            'doc_moderation'
+            'doc_searching',           // Document Searching
+            'doc_viewing',             // Document Viewing
+            'doc_contribution',        // Document Contribution
+            'doc_rating',              // Document Rating
+            'frequently_asked_questions', // Using the FAQ
+            'doc_moderation',          // Moderating Documents (for Moderator)
+            'analytics_access',        // Access to analytics (for Admin only)
+            'view_users',              // View users
+            'create_users',            // Create users
+            'edit_users',              // Edit users
+            'delete_users'             // Delete users
         ];
+        
 
         // Save or get existing permissions
         const permissions = await savePermissions(permissionRepository, perms);
 
-        // Save roles with permissions
-        await saveRole(roleRepository, "Admin", permissions);
-        await saveRole(roleRepository, "Moderator", permissions);
+        // Split permissions for each role
+    const adminPermissions = permissions; // Admin has all permissions
+    const moderatorPermissions = permissions.filter(p => p.name !== 'analytics_access'); 
+    const educatorPermissions = moderatorPermissions.filter(p => p.name !== 'doc_moderation');
+    const openAccessPermissions = educatorPermissions.filter(p => !['doc_contribution', 'view_users', 'create_users', 'edit_users', 'delete_users'].includes(p.name));
 
-        // For Educator role, exclude 'doc_moderation'
-        const educatorPermissions = permissions.filter((_, index) => index !== 5);
+
+        // Save roles with appropriate permissions
+        await saveRole(roleRepository, "Admin", adminPermissions);
+        await saveRole(roleRepository, "Moderator", moderatorPermissions);
         await saveRole(roleRepository, "Educator", educatorPermissions);
-
-        // For Open_Access_User role, exclude 'doc_contribution' and 'doc_moderation'
-        const openAccessPermissions = educatorPermissions.filter((_, index) => index !== 2);
         await saveRole(roleRepository, "Open_Access_User", openAccessPermissions);
 
         console.log("Permissions and roles saved successfully!");
@@ -81,3 +88,4 @@ async function main() {
 
 // Execute main function
 main();
+ 

@@ -10,7 +10,7 @@ createConnection().then(async connection => {
     const userRepository = getManager().getRepository(User);
     const roleRepository = getManager().getRepository(Role);
 
-    const role = await roleRepository.findOne({ where: { id: 4 } });
+    const role = await roleRepository.findOne({ where: { id: 4} });
 
     if (!role) {
         console.error("Role with id: 4 not found. Exiting...");

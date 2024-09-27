@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { RegisterValidation } from '../validation/register.validation';
 import { getManager } from 'typeorm';
 import { User } from '../entity/user.entity';
+import { Role } from '../entity/role.entity'
 import zxcvbn from 'zxcvbn';
 import bcryptjs from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
@@ -10,7 +11,6 @@ import { sign } from 'jsonwebtoken';
 interface AuthenticatedRequest extends Request {
     user?: User;
 }
-
 // User registration function
 export const Register = async (req: Request, res: Response) => {
     try {
@@ -41,13 +41,21 @@ export const Register = async (req: Request, res: Response) => {
 
         // Get the user repository
         const repository = getManager().getRepository(User);
+        const roleRepository = getManager().getRepository(Role);
 
-        // Save the new user to the database with a hashed password
+        // Fetch the role with id = 4
+        const role = await roleRepository.findOne({ where: { id: 1 } });
+        if (!role) {
+            return res.status(400).send({ message: 'Default role not found' });
+        }
+
+        // Save the new user to the database with a hashed password and role_id = 4
         const { password, ...user } = await repository.save({
             first_name: body.first_name,
             last_name: body.last_name,
             email: body.email,
             password: await bcryptjs.hash(body.password, 9),
+            role: role,  // Assign role with id = 4
         });
 
         // Send the user data excluding the password
@@ -56,6 +64,7 @@ export const Register = async (req: Request, res: Response) => {
         res.status(500).send({ message: 'Error registering user', error: (error as Error).message });
     }
 };
+
 
 // User login function
 export const Login = async (req: Request, res: Response) => {

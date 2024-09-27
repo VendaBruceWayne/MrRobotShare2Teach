@@ -28,3 +28,4 @@ export class User {
     @OneToMany(() => Resource, resource => resource.user)
     resources!: Resource[];
 }
+ 
