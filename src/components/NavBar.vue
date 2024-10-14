@@ -15,10 +15,9 @@
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" />
     <div class="navbar-nav">
       <div class="nav-item text-nowrap">
-        <!-- Conditionally render the profile link -->
         <router-link 
           v-if="!isVisitor" 
-          class="p-2 text-white text-decoration-none" 
+          class="p-2 text-white text-decoration-none glow" 
           to="/profile"
         >
           {{ name }}
@@ -31,17 +30,15 @@
           {{ name }}
         </span>
         
-        <!-- Conditionally render the logout link -->
         <router-link 
           v-if="!isVisitor" 
-          class="p-2 text-white text-decoration-none" 
+          class="p-2 text-white text-decoration-none glow" 
           to="/logout" 
           @click="logout"
         >
           Logout
         </router-link>
 
-        <!-- Render the register link if the user is a visitor -->
         <router-link 
           v-if="isVisitor" 
           class="p-2 text-white text-decoration-none" 
@@ -67,8 +64,8 @@ export default {
     onMounted(async () => {
       try {
         const { data } = await axios.get('user', { withCredentials: true });
-        name.value = data.first_name + ' ' + data.last_name;
-      } catch (e) {
+        name.value = `${data.first_name} ${data.last_name}`;
+      } catch {
         name.value = 'Visitor';
       }
     });
@@ -78,10 +75,23 @@ export default {
     }
 
     return {
-      name, 
+      name,
       logout,
       isVisitor
     };
   }
 };
 </script>
+
+<style scoped>
+.glow {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.glow:hover {
+  transform: scale(1.1); /* Zoom in slightly on hover */
+  color: white; /* Change text color on hover */
+}
+</style>

@@ -4,6 +4,7 @@ import AppUsers from '@/pages/users/AppUsers.vue'
 import RegisterPage from '@/pages/RegisterPage.vue'
 import WrapperPage from '@/pages/WrapperPage.vue'
 import LoginPage from '@/pages/LoginPage.vue'
+import UserCreate from '@/pages/users/UserCreate.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -14,6 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       { path: '/', component: DashBoard, meta: { requiresAuth: false }  },  // Root path corrected to "/"
       { path: '/users', component: AppUsers }, 
+      { path: 'users/create', component: UserCreate}
     ]
   },
   
