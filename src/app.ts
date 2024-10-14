@@ -1,18 +1,27 @@
 import express from 'express';
-import sequelize from './config/database'; // Sequelize instance
-import { Faq } from './models/Faq'; // Model import
+import sequelize from './config/database';
+import { Faq } from './models/Faq';
 import faqRouter from './routes/faqRoutes';
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Use CORS middleware before routes
+app.use(cors({
+  credentials: true,
+  origin: ["http://localhost:3000","http://localhost:8080"]
+}));
+
 app.use(express.json());
+
+// Set up routes
 app.use('/api', faqRouter);
 
 sequelize.authenticate()
   .then(() => {
     console.log('Database connection established');
-    return sequelize.sync({ force: false });  // Sync all models
+    return sequelize.sync({ force: true });
   })
   .then(() => {
     console.log('Database & tables synced!');
