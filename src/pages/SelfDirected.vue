@@ -1,13 +1,32 @@
 <template>
    <div class="self-directed-container">
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/oer">OER</a></li>
+      </ul>
+    </nav>
     <h1>Self-directed Learning</h1>
-    <p>Buy the book by clicking on the book</p>
+    <p>Welcome to the Self-Directed Learning page! This section is designed to empower you with the tools and resources
+       needed to take charge of your own learning journey. Self-directed learning is all about setting your own goals,
+       choosing the right materials, and learning at your own pace. Whether you’re a student, professional, or lifelong learner,
+       this approach allows you to tailor your educational experience to suit your personal and professional growth.
+      Explore the curated resources, tips, and activities provided to help you develop effective learning strategies
+      and achieve your objectives. To further enhance your learning experience, buy the book by clicking on the book,
+       and dive deeper into the world of self-directed education!
+    </p>
     <div class="bookstore-images">
       <div v-for="store in bookstores" :key="store.id" class="store-card">
         <img :src="store.image" :alt="store.name" @click="redirectToStore(store.url)" class="store-image" />
         <p>{{ store.name }}</p>
       </div>
     </div>
+    <footer class="footer">
+    <p>© 2024 Share2Teach. All Rights Reserved.</p>
+    <p>Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons BY-NC-SA 4.0</a></p>
+</footer>
   </div>
 </template>
 
@@ -151,15 +170,54 @@ export default {
   text-align: center;
   margin: 20px;
   color: #333;
-  background-color: #f9f9f9; /* Light background for contrast */
+  background-color: #f9f9f9; 
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.navbar {
+  background-color: #12b12c;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0 15px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+.navbar a:hover {
+  background-color: purple;
+  border-radius: 5px;
+}
+
 h1 {
   color: purple;
-  margin-bottom: 20px;
+  font-size: 3rem; /* Adjusts the font size to make it larger */
+  text-align: center;
+  margin: 40px 0; /* Adds space above and below */
+}
+
+p {
+  font-size: 1.2rem; /* Larger than default size */
+  line-height: 1.6;  /* Spacing between lines */
+  margin: 20px 0;    /* Space above and below paragraphs */
+  color: #333;       /* Text color */
+  text-align: left;  /* Align text to the left */
 }
 
 .bookstore-images {
@@ -193,8 +251,26 @@ h1 {
 }
 
 .store-card p {
-  color: purple;
+  color: #12b12c;
   font-weight: bold;
 }
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f3f3f3;
+    border-top: 2px solid #6a0dad;
+  }
+  
+  .footer a {
+    color: #6a0dad;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
 </style>
 

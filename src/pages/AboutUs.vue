@@ -1,9 +1,14 @@
 <template>
     <div class="about-us">
-      <header class="header">
+      <nav class="navbar">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/self">Self-Directed Learning</a></li>
+          <li><a href="/oer">OER</a></li>
+        </ul>
+      </nav>
         <h1>About Us</h1>
-      </header>
-      
       <section class="content">
         <p>
             Welcome to Share2Teach, an innovative platform designed to transform the way
@@ -12,7 +17,7 @@
             Share2Teach is a product of creativity, collaboration, and a shared vision for 
             enhancing education. 
         </p>
-        <h2>Our Story</h2>
+        <h1>Our Story</h1>
         <p>
             Share2Teach was born out of a project assigned to our development team during our 
             third year of study. As aspiring developers, we were tasked with creating a platform
@@ -20,7 +25,7 @@
              educators and learners could freely share, access, and collaborate on a variety of resources, 
              making quality education accessible to all.
         </p>
-        <h3>Our Team</h3>
+        <h1>Our Team</h1>
         <p>
             Our team of four developers worked together on every aspect of Share2Teach, 
             combining our skills and knowledge to build a cohesive and functional platform. 
@@ -52,10 +57,10 @@
   </div>
 
   
-      <footer class="footer">
-        <p>© 2024 Share2Teach. All Rights Reserved.</p>
-        <a href="http://localhost:3000" target="_blank">Visit Our Main Platform</a>
-      </footer>
+  <footer class="footer">
+    <p>© 2024 Share2Teach. All Rights Reserved.</p>
+    <p>Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons BY-NC-SA 4.0</a></p>
+</footer>
     </div>
   </template>
   
@@ -102,53 +107,95 @@
   </script>
   
   <style scoped>
-  .about-us-container {
-  text-align: left;
-  margin: 20px;
+
+.navbar {
+  background-color: #12b12c;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0 15px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+.navbar a:hover {
+  background-color: purple;
+  border-radius: 5px;
+}
+
+h1 {
+  color: purple;
+  font-size: 3rem; /* Adjusts the font size to make it larger */
+  text-align: center;
+  margin: 40px 0; /* Adds space above and below */
+}
+h2 {
+  color: purple;
+  font-size: 3rem; /* Adjusts the font size to make it larger */
+  text-align: center;
+  margin: 40px 0;
   }
 
+  h3 {
+    color: purple;
+  font-size: 3rem; /* Adjusts the font size to make it larger */
+  text-align: center;
+  margin: 40px 0;
+  }
+
+p {
+  font-size: 1.2rem; /* Larger than default size */
+  line-height: 1.6;  /* Spacing between lines */
+  margin: 20px 0;    /* Space above and below paragraphs */
+  color: #333;       /* Text color */
+  text-align: left;  /* Align text to the left */
+}
+
   .about-us {
-    max-width: 800px;
-    margin: 0 auto;
+    margin: 20px;
     padding: 20px;
     font-family: Arial, sans-serif;
     color: #333;
-  }
-  
-  .header {
-    background-color: #6a0dad; /* Purple color */
-    color: #fff;
-    padding: 20px;
     text-align: center;
+    background-color: #f9f9f9; 
     border-radius: 8px;
-  }
-  
-  .header h1 {
-    margin: 0;
-    font-size: 2.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
   .content p {
     font-size: 1.2rem;
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-size: 1.2rem; /* Larger than default size */
+    line-height: 1.6;  /* Spacing between lines */
+    margin: 20px 0;    /* Space above and below paragraphs */
+    color: #333;       /* Text color */
+    text-align: left; 
   }
   
   .designers {
     margin-top: 40px;
   }
   
-  .designers h2 {
-    font-size: 2rem;
-    color: #6a0dad;
-    margin-bottom: 20px;
-  }
-  
   .designer {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #8000e9;
     padding: 15px;
     border-radius: 8px;
   }
@@ -161,9 +208,9 @@
   }
   
   .designer-info h3 {
-    margin: 0;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #6a0dad;
+    margin-bottom: 20px;
   }
   
   .designer-info p {
@@ -223,5 +270,6 @@
 .evaluation-footer button:hover {
   background-color: #5a0cba; /* Darker purple on hover */
 }
-  </style>
+
+</style>
   
