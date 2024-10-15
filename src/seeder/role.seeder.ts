@@ -48,21 +48,37 @@ async function main() {
         // Get repositories
         const permissionRepository = connection.getRepository(Permission);
         const roleRepository = connection.getRepository(Role);
-
-        // Define all possible permissions, including user-related permissions
+        
+        // Define all possible permissions, including user, role, and resource-related permissions
         const perms = [
-            'doc_searching',           // Document Searching
-            'doc_viewing',             // Document Viewing
-            'doc_contribution',        // Document Contribution
-            'doc_rating',              // Document Rating
-            'frequently_asked_questions', // Using the FAQ
-            'doc_moderation',          // Moderating Documents (for Moderator)
-            'analytics_access',        // Access to analytics (for Admin only)
-            'view_users',              // View users
-            'create_users',            // Create users
-            'edit_users',              // Edit users
-            'delete_users'             // Delete users
+            'doc_searching',              // Document Searching
+            'doc_viewing',                // Document Viewing
+            'doc_contribution',           // Document Contribution
+            'doc_rating',                 // Document Rating
+            'frequently_asked_questions',  // Using the FAQ
+            'doc_moderation',             // Moderating Documents (for Moderator)
+            'analytics_access',           // Access to analytics (for Admin only)
+            
+            // User-related permissions
+            'view_users',                 // View users
+            'create_users',               // Create users
+            'edit_users',                 // Edit users
+            'delete_users',               // Delete users
+
+            // Role-related permissions
+            'view_roles',                 // View roles
+            'create_roles',               // Create roles
+            'edit_roles',                 // Edit roles
+            'delete_roles',               // Delete roles
+
+            // Resource-related permissions
+            'view_resources',             // View resources
+            'create_resources',           // Create resources
+            'edit_resources',             // Edit resources
+            'delete_resources'            // Delete resources
         ];
+
+        
         
 
         // Save or get existing permissions

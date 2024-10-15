@@ -20,7 +20,7 @@ createConnection().then(async connection => {
         process.exit(1);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
         try {
             const password = await bcryptjs.hash('password@123', 10);
 

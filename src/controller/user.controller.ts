@@ -13,7 +13,6 @@ export const Users = async (req: Request, res: Response) => {
 
     try {
         const repository = getRepository(User);
-
         const [users, total] = await repository.findAndCount({
             relations: ['role'],
             take,
@@ -35,7 +34,6 @@ export const Users = async (req: Request, res: Response) => {
             }
         });
     } catch (error) {
-        console.error("Error fetching users:", error);
         res.status(500).send({
             message: "An error occurred while fetching users",
             error: (error as Error).message
@@ -46,19 +44,18 @@ export const Users = async (req: Request, res: Response) => {
 // Create a new user with a hashed password
 export const CreateUser = async (req: Request, res: Response) => {
     try {
-        const { role_id, ...body } = req.body;
-        const hashedPassword = await bcryptjs.hash("12345678@T", 10);
+        const { role_id, password, ...body } = req.body;
+        const hashedPassword = await bcryptjs.hash(password || "12345678@T", 10);
         const repository = getRepository(User);
+
         const user = await repository.save({
             ...body,
             password: hashedPassword,
-            role: {
-                id: role_id,
-            },
+            role: { id: role_id }
         });
+
         res.status(201).send(user);
     } catch (error) {
-        console.error("Error creating user:", error);
         res.status(500).send({
             message: "An error occurred while creating the user",
             error: (error as Error).message
@@ -74,7 +71,7 @@ export const GetUser = async (req: Request, res: Response) => {
 
         const user = await repository.findOne({
             where: { id: userId },
-            relations: ['role'],
+            relations: ['role']
         });
 
         if (user) {
@@ -85,7 +82,6 @@ export const GetUser = async (req: Request, res: Response) => {
             res.status(404).send({ message: "User not found" });
         }
     } catch (error) {
-        console.error("Error fetching user:", error);
         res.status(500).send({
             message: "An error occurred while fetching the user",
             error: (error as Error).message
@@ -100,9 +96,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
         const repository = getRepository(User);
         const userId = parseInt(req.params.id, 10);
 
-        const user = await repository.findOne({
-            where: { id: userId }
-        });
+        const user = await repository.findOne({ where: { id: userId } });
 
         if (!user) {
             return res.status(404).send({ message: "User not found" });
@@ -110,20 +104,22 @@ export const UpdateUser = async (req: Request, res: Response) => {
 
         await repository.update(userId, body);
 
+        if (role_id) {
+            await repository.update(userId, { role: { id: role_id } });
+        }
+
         const updatedUser = await repository.findOne({
             where: { id: userId },
-            ...body,
-            role: {
-                id: role_id,
-            }
+            relations: ['role']
         });
 
         if (updatedUser) {
-            const { password, ...data } = updatedUser;
-            return res.status(202).send(data);
+            const { password, role, ...data } = updatedUser;
+            return res.status(202).send({ ...data, role: role.name });
+        } else {
+            return res.status(404).send({ message: "Updated user not found" });
         }
     } catch (error) {
-        console.error("Error updating user:", error);
         res.status(500).send({
             message: "An error occurred while updating the user",
             error: (error as Error).message
@@ -145,7 +141,6 @@ export const DeleteUser = async (req: Request, res: Response) => {
 
         res.status(204).send();
     } catch (error) {
-        console.error("Error deleting user:", error);
         res.status(500).send({
             message: "An error occurred while deleting the user",
             error: (error as Error).message

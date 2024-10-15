@@ -18,7 +18,7 @@ createConnection().then((connection: Connection) => {
     app.use(cookieParser());
     app.use(cors({
         credentials: true,
-        origin: ["http://localhost:3000"] 
+        origin: ["http://localhost:3000", "http://localhost:8081"] 
     })); 
 
     routes(app);
