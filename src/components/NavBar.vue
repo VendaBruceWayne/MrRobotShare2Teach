@@ -12,7 +12,6 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" />
     <div class="navbar-nav">
       <div class="nav-item text-nowrap">
         <router-link 
@@ -33,7 +32,7 @@
         <router-link 
           v-if="!isVisitor" 
           class="p-2 text-white text-decoration-none glow" 
-          to="/logout" 
+          to="/login" 
           @click="logout"
         >
           Logout
@@ -48,6 +47,10 @@
         </router-link>
       </div>
     </div>
+    <!-- Error message display -->
+    <div v-if="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
   </header>
 </template>
 
@@ -59,25 +62,34 @@ export default {
   name: "NavBar",
   setup() {
     const name = ref('');
+    const errorMessage = ref(''); // Error message state
     const isVisitor = computed(() => name.value === 'Visitor');
 
     onMounted(async () => {
       try {
         const { data } = await axios.get('user', { withCredentials: true });
         name.value = `${data.first_name} ${data.last_name}`;
-      } catch {
+      } catch (error) {
+        errorMessage.value = 'Failed to load user data. Please try again later.'; // Set error message
         name.value = 'Visitor';
+        console.error('Error fetching user data:', error); // Log the error
       }
     });
 
     const logout = async () => {
-      await axios.post('logout');
+      try {
+        await axios.post('logout');
+      } catch (error) {
+        errorMessage.value = 'Logout failed. Please try again.'; // Set error message
+        console.error('Error during logout:', error); // Log the error
+      }
     }
 
     return {
       name,
       logout,
-      isVisitor
+      isVisitor,
+      errorMessage // Expose error message to the template
     };
   }
 };

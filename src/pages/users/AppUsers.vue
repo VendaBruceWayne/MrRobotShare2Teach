@@ -1,9 +1,9 @@
 <template>
-   <div class="pt-3 pb-2 mb-3 border-bottom">
-  <router-link to="/users/create" class="custom-button add-button">
-    Add User
-  </router-link>
-</div>
+  <div class="pt-3 pb-2 mb-3 border-bottom">
+    <router-link to="/users/create" class="custom-button add-button">
+      Add User
+    </router-link>
+  </div>
   <div class="table-container">
     <div class="table-responsive">
       <table class="table table-striped table-sm">
@@ -23,7 +23,7 @@
             <td>{{ user.email }}</td>
             <td>{{ user.role || 'No Role' }}</td>
             <td>
-              <button @click="editUser(user.id)" class="custom-button edit-button">Edit</button>
+              <router-link :to="`/users/${user.id}/edit`" class="custom-button delete-button">Edit</router-link>    
               <button @click="confirmDeleteUser(user.id)" class="custom-button delete-button">Delete</button>
             </td>
           </tr>
@@ -38,8 +38,10 @@
 </template>
 
 <script lang="ts">
+
 import { onMounted, ref, watch } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 interface UserInterface {
   id: number;
@@ -55,9 +57,12 @@ export default {
     const users = ref<UserInterface[]>([]);
     const page = ref(1);
     const last_page = ref(1);
+    const router = useRouter();
+    
 
     const loadUsers = async () => {
       try {
+        
         const { data } = await axios.get(`/users?page=${page.value}`);
         users.value = data.data;
         last_page.value = data.meta.last_page;
@@ -66,18 +71,10 @@ export default {
       }
     };
 
-    const addUser = () => {
-      console.log("Add User clicked");
-      // Implement add user logic here
-    };
-
-    const editUser = (id: number) => {
-      console.log(`Edit user with ID: ${id}`);
-    };
-
     const confirmDeleteUser = (id: number) => {
       if (confirm("Are you sure you want to delete this user?")) {
         deleteUser(id);
+        
       }
     };
 
@@ -110,8 +107,6 @@ export default {
       users,
       page,
       last_page,
-      addUser,
-      editUser,
       confirmDeleteUser,
       goToPreviousPage,
       goToNextPage,
