@@ -14,10 +14,7 @@
             </div>
             <div class="mb-3">
                 <label>Document</label>
-                <div class="input-group">
-                    <input v-model="data.pdf" class="form-control" name="document" readonly />
-                    <DocumentUpload @uploaded="data.pdf = $event" />
-                </div>
+                <input v-model="data.pdf" class="form-control" name="document" readonly />
             </div>
             <div class="mb-3">
                 <label>Moderation Status</label>
@@ -27,6 +24,21 @@
                     <option value="rejected">Rejected</option>
                 </select>
             </div>
+
+            <!-- Preview Section -->
+            <div v-if="data.pdf" class="mb-3">
+                <h5>Document Preview:</h5>
+                
+                    <img :src="data.pdf" alt="Preview" width="100%" />
+                
+                <div v-if="isPdf(data.pdf)">
+                    <iframe :src="data.pdf" width="100%" height="400px" frameborder="0"></iframe>
+                </div>
+                <div v-else>
+                    <p>Unsupported file type for preview.</p>
+                </div>
+            </div>
+
             <button class="btn btn-purple" :disabled="!isFormValid">Save</button>
         </form>
         <button @click="goBack" class="btn btn-secondary mt-3">Back</button>
@@ -41,27 +53,22 @@
 import { reactive, onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import DocumentUpload from '@/components/DocumentUpload.vue';
 
 export default {
     name: "ResourceEdit",
-    components: {
-        DocumentUpload
-    },
     setup() {
         const router = useRouter();
         const route = useRoute();
 
-        // Define the shape of the data object with TypeScript type annotations
         const data = reactive<{
             title: string;
             description: string;
-            pdf: string;
+            pdf: string; // Add pdf field
             moderationStatus: 'pending' | 'approved' | 'rejected'; // Add moderationStatus
         }>({
             title: '',
             description: '',
-            pdf: '',
+            pdf: '', // Initialize pdf as an empty string
             moderationStatus: 'pending' // Initialize with a default value
         });
 
@@ -76,7 +83,7 @@ export default {
                 const response = await axios.get(`/resources/${route.params.id}`);
                 data.title = response.data.title;
                 data.description = response.data.description;
-                data.pdf = response.data.pdf;
+                data.pdf = response.data.pdf; // Set pdf from API response
                 data.moderationStatus = response.data.moderationStatus; // Set moderationStatus from API
             } catch (error) {
                 console.error('Error fetching resource details:', error);
@@ -96,12 +103,23 @@ export default {
             router.push('/resources');
         };
 
+        // Methods to check file type
+        const isImage = (filePath: string) => {
+            return /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(filePath);
+        };
+
+        const isPdf = (filePath: string) => {
+            return /\.pdf$/i.test(filePath);
+        };
+
         return {
             data,
             submit,
             goBack,
             successMessage,
-            isFormValid
+            isFormValid,
+            isImage,
+            isPdf
         };
     }
 }

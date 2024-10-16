@@ -7,8 +7,8 @@
                 <label> </label>
             </div>
         <li class="nav-item">
-          <router-link to="/ " active-class="active" class="nav-link">
-            Dashboard
+          <router-link to="/home" active-class="active" class="nav-link">
+            Home
           </router-link>
         </li>
         <li class="nav-item">
@@ -19,6 +19,11 @@
         <li class="nav-item">
           <router-link to="/roles" active-class="active" class="nav-link">
             Roles
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/modules" active-class="active" class="nav-link">
+            Modules
           </router-link>
         </li>
         <li class="nav-item">

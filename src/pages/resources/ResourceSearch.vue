@@ -29,7 +29,7 @@
         </table>
       </div>
     </div>
-</template>
+  </template>
   
   <script lang="ts">
   import { ref } from 'vue';

@@ -30,6 +30,23 @@
           {{ name }}
         </span>
 
+        <!-- Display login and register links for visitors -->
+        <router-link
+          v-if="isVisitor"
+          class="p-2 text-white text-decoration-none glow"
+          to="/login"
+        >
+          Login
+        </router-link>
+
+        <router-link
+          v-if="isVisitor"
+          class="p-2 text-white text-decoration-none glow"
+          to="/register"
+        >
+          Register
+        </router-link>
+
         <!-- Display logout button for authenticated users -->
         <router-link
           v-if="!isVisitor"
@@ -38,15 +55,6 @@
           @click="logout"
         >
           Logout
-        </router-link>
-
-        <!-- Display register button for visitors -->
-        <router-link
-          v-if="isVisitor"
-          class="p-2 text-white text-decoration-none glow"
-          to="/register"
-        >
-          Register
         </router-link>
       </div>
     </div>

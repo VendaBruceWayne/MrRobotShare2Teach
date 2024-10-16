@@ -17,20 +17,23 @@ import FaqPage from '@/pages/FaqPage.vue'
 import AboutUs from '@/pages/AboutUs.vue'
 import OER from '@/pages/OER.vue'
 import SelfDirected from '@/pages/SelfDirected.vue'
+import HomePage from '@/pages/HomePage.vue'
+import UserModules from '@/pages/modules/UserModules.vue'
+import ModulesCreate from '@/pages/modules/ModulesCreate.vue'
+import RateResource from '@/pages/resources/RateResource.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/register', component: RegisterPage}, 
   { path: '/login', component: LoginPage}, 
-  {
-    path: '/faq',
-    component: FaqPage,
-  },
-  { path: '/about', component: AboutUs},
-  { path: '/self', component: SelfDirected },
-  { path: '/oer', component: OER },
+
   { path: '', 
     component: WrapperPage, 
     children: [
+      { path: '/faq',component: FaqPage},
+      { path: '/about', component: AboutUs},
+      { path: '/self', component: SelfDirected },
+      { path: '/oer', component: OER },
       { path: '/', component: DashBoard, meta: { requiresAuth: false }  },  // Root path corrected to "/"
       { path: '/profile', component: UserProfile }, 
       { path: '/users', component: AppUsers }, 
@@ -42,6 +45,10 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/resources', component: ResourcesPage}, 
       { path: '/resources/create', component: ResourcesCreate}, 
       { path: '/resources/:id/edit', component: ResourceEdit}, 
+      { path: '/home', component: HomePage, meta: { requiresAuth: false }},
+      { path: '/home/:id/rating', component: RateResource, meta: { requiresAuth: false } },
+      { path: '/modules', component: UserModules},
+      { path: '/modules/create', component: ModulesCreate},
 
     ]
   },
