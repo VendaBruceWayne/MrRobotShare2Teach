@@ -102,7 +102,7 @@ export const UpdateResource = async (req: Request, res: Response) => {
         console.error("Error updating resource:", error);
         res.status(500).json({ 
             message: "Error updating resource", 
-            error: (error as Error).message 
+            error: (error as Error).message  
         });
     }
 };

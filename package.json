@@ -6,7 +6,8 @@
     "start": "nodemon src/index.ts",
     "roles:seed": "ts-node src/seeder/role.seeder.ts",
     "resources:seed": "ts-node src/seeder/resource.seeder.ts",
-    "users:seed": "ts-node src/seeder/user.seeder.ts"
+    "users:seed": "ts-node src/seeder/user.seeder.ts",
+    "modules:seed": "ts-node src/seeder/module.seeder.ts"
   },
   "keywords": [],
   "author": "",
@@ -44,13 +45,17 @@
     "express": "^4.21.0",
     "express-validation": "^4.1.1",
     "faker": "^6.6.6",
+    "html-pdf": "^3.0.1",
     "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.8.0",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^3.0.1",
     "mysql2": "^3.11.0",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
+    "puppeteer": "^23.5.3",
     "reflect-metadata": "^0.2.2",
+    "sharp": "^0.33.5",
     "typeorm": "^0.3.20",
     "zxcvbn": "^4.4.2"
   }

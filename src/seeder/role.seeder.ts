@@ -48,7 +48,7 @@ async function main() {
         // Get repositories
         const permissionRepository = connection.getRepository(Permission);
         const roleRepository = connection.getRepository(Role);
-        
+
         // Define all possible permissions, including user, role, and resource-related permissions
         const perms = [
             'doc_searching',              // Document Searching
@@ -75,9 +75,12 @@ async function main() {
             'view_resources',             // View resources
             'create_resources',           // Create resources
             'edit_resources',             // Edit resources
-            'delete_resources'            // Delete resources
+            'delete_resources',            // Delete resources
+            
+            //access to delete and add modules
+            'modules'
         ];
-
+ 
         
         
 

@@ -51,6 +51,8 @@ import { createDownload} from "./controller/download.controller";
 import { tagResource,createTag, getResourcesByTag } from "./controller/tag.controller"; 
 import { rateResource, getResourceRatings } from "./controller/rate.controller";
 import { SearchController } from './controller/search.controller';
+import { createModule, deleteModule, getModules, } from './controller/modules.controller'
+
 
 export const routes = (router: Router) => {
     // Auth routes
@@ -95,17 +97,17 @@ export const routes = (router: Router) => {
 
 
     // Resources routes
-    router.get("/api/resources", AuthMiddleware, PermissionMiddleware('view_resources'), Resources); // Get all resources
+    router.get("/api/resources", AuthMiddleware,  Resources); // Get all resources
     router.post("/api/resources", AuthMiddleware, PermissionMiddleware('create_resources'), CreateResource); // Create a new resource
-    router.get("/api/resources/:id", AuthMiddleware, PermissionMiddleware('view_resources'), GetResource); // Get a resource by ID
+    router.get("/api/resources/:id", AuthMiddleware, GetResource); // Get a resource by ID
     router.put("/api/resources/:id", AuthMiddleware, PermissionMiddleware('edit_resources'), UpdateResource); // Update a resource by ID
     router.delete("/api/resources/:id", AuthMiddleware, PermissionMiddleware('delete_resources'), DeleteResource); // Delete a resource by ID
 
     // File upload and moderation routes
     router.post("/api/upload", AuthMiddleware, PermissionMiddleware('doc_contribution'), Upload); // Upload a file (PDF)
     router.post("/api/moderate/:id", AuthMiddleware, PermissionMiddleware('doc_moderation'), ModerateFile); // Moderate an uploaded file
-    router.get("/api/moderated", AuthMiddleware, PermissionMiddleware('doc_moderation'), GetModeratedFiles); // Get a list of moderated files
-    router.get("/api/metadata/:filename?", AuthMiddleware, PermissionMiddleware('doc_viewing'), GetFileMetadata); // Get metadata for all files or a specific file
+    router.get("/api/moderated", AuthMiddleware,  GetModeratedFiles); // Get a list of moderated files
+    router.get("/api/metadata/:filename?", AuthMiddleware, GetFileMetadata); // Get metadata for all files or a specific file
 
     // Serve uploaded files statically
     router.use("/api/uploads", express.static("./src/uploads")); // Serve files from the uploads directory
@@ -132,8 +134,15 @@ router.delete('/api/faqs/:id', deleteFAQ);
  const searchController = new SearchController();
  router.get('/api/search', searchController.searchResources.bind(searchController));
 
+ //Modules
+
+ router.get("/api/modules", AuthMiddleware, getModules);
+ router.delete("/api/modules",AuthMiddleware, PermissionMiddleware("modules"),deleteModule);
+ router.post("/api/modules", AuthMiddleware,PermissionMiddleware("modules"),createModule); 
+
 
 
 
     return router;
 };
+ 

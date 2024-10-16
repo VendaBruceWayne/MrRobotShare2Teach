@@ -7,6 +7,10 @@ import { extname, basename } from "path";
 import fs from "fs";
 import { createHash } from "crypto"; 
 import { v4 as uuidv4 } from "uuid"; 
+import { User } from "../entity/user.entity";
+import { Resource } from "../entity/resource.entity";
+import { getRepository, getManager } from "typeorm";
+
 
 type FileStatus = "pending" | "approved" | "rejected";
 
@@ -39,12 +43,11 @@ const storage = multer.diskStorage({
         cb(null, `${Date.now()}${extname(file.originalname)}`);
     },
 });
-
 const upload = multer({ storage }).single("pdf");
 
-export const Upload = (req: Request, res: Response): void => {
+export const Upload = async (req: Request, res: Response): Promise<void> => {
     try {
-        upload(req, res, (err) => {
+        upload(req, res, async (err) => {
             if (err) {
                 return res.status(500).json({ error: "File upload failed", details: err.message });
             }
@@ -57,6 +60,27 @@ export const Upload = (req: Request, res: Response): void => {
             const fileId = uuidv4();
             const fileHash = generateFileHash(uploadedFile.path);
             const originalName = basename(uploadedFile.originalname, extname(uploadedFile.originalname));
+
+            // Create a new Resource instance
+            const resource = new Resource();
+            resource.title = req.body.title; // Get title from the request body
+            resource.description = req.body.description; // Get description from the request body
+            resource.pdf = uploadedFile.path; // Save the file path in the resource
+            resource.moderationStatus = 'pending'; // Default status
+           
+
+            // Assign user if authenticated
+            if (req.user) {
+                resource.user = req.user as User; // Ensure you have user info in the request (e.g., from a middleware)
+            }
+
+            // Additional fields can be set here if needed
+            // resource.tags = req.body.tags; // Assuming tags are sent in the body
+            // resource.modules = req.body.modules; // Assuming modules are sent in the body
+
+            // Save the resource in the database
+            const resourceRepository = getRepository(Resource);
+            await resourceRepository.save(resource); // Persist the new Resource entity
 
             const fileMetadata: FileMetadata = {
                 id: fileId,
@@ -75,8 +99,9 @@ export const Upload = (req: Request, res: Response): void => {
             moderatedFiles[fileId] = fileMetadata;
 
             res.status(200).json({
-                message: "File uploaded successfully and is pending moderation.",
+                message: "File uploaded successfully and resource created.",
                 metadata: fileMetadata,
+                resourceId: resource.id, // Return the ID of the newly created resource
             });
         });
     } catch (error) {
@@ -148,9 +173,36 @@ export const GetFileMetadata = (req: Request, res: Response) => {
     res.status(200).json(Object.values(moderatedFiles));
 };
 
-export const GetModeratedFiles = (req: Request, res: Response) => {
-    const moderated = Object.values(moderatedFiles).filter(
-        (file) => file.status === "approved" || file.status === "rejected"
-    );
-    res.status(200).json(moderated);
+export const GetModeratedFiles = async (req: Request, res: Response) => {
+    try {
+      const repository = getRepository(Resource);
+      
+      const take = Number(req.query.take) || 10; // Define take, default to 10
+      const page = Number(req.query.page) || 1;  // Define page, default to 1
+      
+      const [data, total] = await repository.findAndCount({
+        where: {
+          moderationStatus: 'approved', // Fetch only approved files
+        },
+        take,
+        skip: (page - 1) * take,
+      });
+  
+      res.send({
+        data,
+        meta: {
+          total,
+          page,
+          last_page: Math.ceil(total / take),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching moderated resources:", error);
+      res.status(500).json({
+        message: "Error fetching moderated resources",
+        error: (error as Error).message,
+      });
+    }
+  
+  
 };
