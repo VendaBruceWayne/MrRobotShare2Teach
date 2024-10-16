@@ -112,11 +112,11 @@ export const routes = (router: Router) => {
 
 
     // Define routes for FAQs
-    router.post('/faqs', createFAQ);
-router.get('/faqs/:id', getFAQById);
-router.get('/faqs', getAllFAQs);
-router.put('/faqs/:id', updateFAQ);
-router.delete('/faqs/:id', deleteFAQ);
+    router.post('/api/faqs', createFAQ);
+router.get('/api/faqs/:id', getFAQById);
+router.get('/api/faqs', getAllFAQs);
+router.put('/api/faqs/:id', updateFAQ);
+router.delete('/api/faqs/:id', deleteFAQ);
 
  // Tag a resource
  router.post('/api/resources/:resourceId/tags/:tagId', AuthMiddleware, tagResource);
@@ -125,12 +125,12 @@ router.delete('/faqs/:id', deleteFAQ);
 
  //Rating 
  
- router.post("/rate", rateResource);
- router.get("/resource/:id/ratings", getResourceRatings);
+ router.post("/api/rate", rateResource);
+ router.get("/api/resource/:id/ratings", getResourceRatings);
 
  //Search
  const searchController = new SearchController();
- router.get('/search', searchController.searchResources.bind(searchController));
+ router.get('/api/search', searchController.searchResources.bind(searchController));
 
 
 

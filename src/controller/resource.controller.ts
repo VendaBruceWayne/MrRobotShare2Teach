@@ -94,7 +94,7 @@ export const UpdateResource = async (req: Request, res: Response) => {
         if (!existingResource) {
             return res.status(404).json({ message: "Resource not found" });
         }
-
+ 
         await repository.update(resourceId, req.body);
         const updatedResource = await repository.findOne({ where: { id: resourceId } });
         res.status(202).json(updatedResource);

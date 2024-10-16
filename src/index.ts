@@ -27,3 +27,4 @@ createConnection().then((connection: Connection) => {
         console.log(`Listening on port ${port}`);
     });
 }).catch(error => console.log("TypeORM connection error: ", error));
+  

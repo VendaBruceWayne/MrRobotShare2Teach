@@ -17,7 +17,7 @@ export class Resource {
     @Column()
     description!: string;
 
-    @Column()
+    @Column() 
     pdf!: string;
 
     // Add fields for moderation status and moderatedBy user
@@ -36,7 +36,7 @@ export class Resource {
     // Add ratings relationship, allow nullable/empty array
     @OneToMany(() => Rating, rating => rating.resource, { nullable: true })
     ratings?: Rating[] | null; // Ratings can be null or an empty array
-
+ 
     // Add tags relationship, allow nullable/empty array
     @ManyToMany(() => Tag, tag => tag.resources, { nullable: true })
     @JoinTable() // Required for ManyToMany relations
