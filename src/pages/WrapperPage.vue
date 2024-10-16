@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper-page">
     <NavBar />
     <div class="container-fluid">
       <div class="row">
@@ -38,3 +38,4 @@ export default {
   }
 };
 </script>
+

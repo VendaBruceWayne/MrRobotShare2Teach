@@ -3,10 +3,16 @@
     <router-link to="/users/create" class="custom-button add-button">
       Add User
     </router-link>
+    <input
+      type="text"
+      v-model="searchQuery"
+      placeholder="Search users..."
+      class="form-control mb-3"
+    />
   </div>
   <div class="table-container">
     <div class="table-responsive">
-      <table class="table table-striped table-sm">
+      <table ref="userTable" class="table table-striped table-sm">
         <thead>
           <tr>
             <th scope="col">#User ID</th>
@@ -17,13 +23,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
+          <tr v-for="user in filteredUsers" :key="user.id">
             <td>{{ user.id }}</td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role || 'No Role' }}</td>
             <td>
-              <router-link :to="`/users/${user.id}/edit`" class="custom-button delete-button">Edit</router-link>    
+              <router-link :to="`/users/${user.id}/edit`" class="custom-button edit-button">Edit</router-link>    
               <button @click="confirmDeleteUser(user.id)" class="custom-button delete-button">Delete</button>
             </td>
           </tr>
@@ -38,8 +44,7 @@
 </template>
 
 <script lang="ts">
-
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -57,12 +62,14 @@ export default {
     const users = ref<UserInterface[]>([]);
     const page = ref(1);
     const last_page = ref(1);
+    const searchQuery = ref(""); // Search query state
     const router = useRouter();
     
+    // Ref for userTable
+    const userTable = ref<HTMLElement | null>(null); // Explicitly typed
 
     const loadUsers = async () => {
       try {
-        
         const { data } = await axios.get(`/users?page=${page.value}`);
         users.value = data.data;
         last_page.value = data.meta.last_page;
@@ -74,7 +81,6 @@ export default {
     const confirmDeleteUser = (id: number) => {
       if (confirm("Are you sure you want to delete this user?")) {
         deleteUser(id);
-        
       }
     };
 
@@ -100,6 +106,36 @@ export default {
       }
     };
 
+    const filteredUsers = computed(() => {
+      return users.value.filter(user =>
+        `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        (user.role && user.role.toLowerCase().includes(searchQuery.value.toLowerCase()))
+      );
+    });
+
+    // Function to search within table rows
+    const searchByTag = () => {
+  const query = searchQuery.value.toLowerCase();
+  
+  if (userTable.value) {
+    const rows = userTable.value.querySelectorAll('tbody tr'); // Get table rows
+    
+    rows.forEach((row) => {
+      // Ensure that row is an HTMLElement
+      const htmlRow = row as HTMLElement;
+      const textContent = htmlRow.textContent?.toLowerCase() || "";
+      
+      if (textContent.includes(query)) {
+        htmlRow.style.display = ""; // Show row if it matches
+      } else {
+        htmlRow.style.display = "none"; // Hide row if it doesn't match
+      }
+    });
+  }
+};
+
+
     onMounted(loadUsers);
     watch(page, loadUsers);
 
@@ -107,13 +143,20 @@ export default {
       users,
       page,
       last_page,
+      searchQuery,
+      filteredUsers,
       confirmDeleteUser,
       goToPreviousPage,
       goToNextPage,
+      userTable, // Return the table ref
+      searchByTag, // Return the search function
     };
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .table-container {

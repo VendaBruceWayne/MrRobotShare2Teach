@@ -19,20 +19,29 @@ export default {
             if (!files || files.length === 0) return;
 
             const formData = new FormData();
-            formData.append('document', files[0]);
+            formData.append('pdf', files[0]);  // Append the file using the correct key ('pdf')
 
-            const {data} = await axios.post('upload', formData);
+            try {
+                const { data } = await axios.post('/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
 
-            context.emit('uploaded', data.URL);
-        }
+                // Emit the file metadata back to the parent component
+                context.emit('uploaded', data.metadata);
+            } catch (error) {
+                console.error('File upload failed:', error);
+            }
+        };
 
         return {
             upload
-        }
+        };
     }
 }
 </script>
 
-<style>
+<style scoped>
 /* Add any styles if needed */
 </style>

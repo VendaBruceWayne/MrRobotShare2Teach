@@ -15,9 +15,17 @@
             <div class="mb-3">
                 <label>Document</label>
                 <div class="input-group">
-                    <input v-model="data.document" class="form-control" name="document" readonly />
-                    <DocumentUpload @uploaded="data.document = $event" />
+                    <input v-model="data.pdf" class="form-control" name="document" readonly />
+                    <DocumentUpload @uploaded="data.pdf = $event" />
                 </div>
+            </div>
+            <div class="mb-3">
+                <label>Moderation Status</label>
+                <select v-model="data.moderationStatus" class="form-control" name="moderationStatus">
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
             </div>
             <button class="btn btn-purple" :disabled="!isFormValid">Save</button>
         </form>
@@ -43,17 +51,24 @@ export default {
     setup() {
         const router = useRouter();
         const route = useRoute();
-        
-        const data = reactive({
+
+        // Define the shape of the data object with TypeScript type annotations
+        const data = reactive<{
+            title: string;
+            description: string;
+            pdf: string;
+            moderationStatus: 'pending' | 'approved' | 'rejected'; // Add moderationStatus
+        }>({
             title: '',
             description: '',
-            document: ''
+            pdf: '',
+            moderationStatus: 'pending' // Initialize with a default value
         });
 
         const successMessage = ref<string | null>(null);
-        
+
         const isFormValid = computed(() => {
-            return data.title && data.description && data.document;
+            return data.title && data.description && data.pdf;
         });
 
         onMounted(async () => {
@@ -61,7 +76,8 @@ export default {
                 const response = await axios.get(`/resources/${route.params.id}`);
                 data.title = response.data.title;
                 data.description = response.data.description;
-                data.document = response.data.document;
+                data.pdf = response.data.pdf;
+                data.moderationStatus = response.data.moderationStatus; // Set moderationStatus from API
             } catch (error) {
                 console.error('Error fetching resource details:', error);
             }

@@ -106,7 +106,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .btn-purple {
     background-color: #6f42c1; /* Replace with your preferred purple color */
     border-color: #6f42c1; /* Replace with your preferred purple border color */

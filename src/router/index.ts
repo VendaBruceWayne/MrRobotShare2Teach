@@ -13,11 +13,21 @@ import ResourceEdit from '@/pages/resources/ResourceEdit.vue'
 import RoleCreate from '@/pages/roles/RoleCreate.vue'
 import RoleEdit from '@/pages/roles/RoleEdit.vue'
 import UserProfile from '@/pages/UserProfile.vue'
-
+import FaqPage from '@/pages/FaqPage.vue'
+import AboutUs from '@/pages/AboutUs.vue'
+import OER from '@/pages/OER.vue'
+import SelfDirected from '@/pages/SelfDirected.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/register', component: RegisterPage}, 
   { path: '/login', component: LoginPage}, 
+  {
+    path: '/faq',
+    component: FaqPage,
+  },
+  { path: '/about', component: AboutUs},
+  { path: '/self', component: SelfDirected },
+  { path: '/oer', component: OER },
   { path: '', 
     component: WrapperPage, 
     children: [

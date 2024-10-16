@@ -4,6 +4,17 @@
             Add Resource
         </router-link>
     </div>
+
+    <!-- Search Input Field -->
+    <div class="search-container">
+        <input
+            type="text"
+            v-model="searchQuery"
+            class="search-input"
+            placeholder="Search resources by title or description..."
+        />
+    </div>
+
     <div class="table-container">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
@@ -16,7 +27,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="resource in resources" :key="resource.id">
+                    <!-- Filter resources based on search query -->
+                    <tr v-for="resource in filteredResources" :key="resource.id">
                         <td class="id-column">{{ resource.id }}</td>
                         <td class="title-column">{{ resource.title }}</td>
                         <td class="description-column">{{ resource.description }}</td>
@@ -36,9 +48,8 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
 
 interface ResourceInterface {
     id: number;
@@ -52,17 +63,28 @@ export default {
         const resources = ref<ResourceInterface[]>([]);
         const page = ref(1);
         const last_page = ref(1);
-        const router = useRouter();
+        const searchQuery = ref('');
 
         const loadResources = async () => {
             try {
-                const { data } = await axios.get(`/resources?page=${page.value}`);
+                const { data } = await axios.get(`/resources?page=${page.value}&query=${searchQuery.value}`);
                 resources.value = data.data;
                 last_page.value = data.meta.last_page;
             } catch (error) {
                 console.error('Error fetching resources:', error);
             }
         };
+
+        // Filter resources based on search query
+        const filteredResources = computed(() => {
+            return resources.value.filter(resource => 
+                resource.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                resource.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+            );
+        });
+
+        // Watch for changes in page and searchQuery, and reload resources
+        watch([page, searchQuery], loadResources);
 
         const confirmDeleteResource = (id: number) => {
             if (confirm('Are you sure you want to delete this resource?')) {
@@ -82,23 +104,25 @@ export default {
 
         const goToPreviousPage = () => {
             if (page.value > 1) {
-                page.value--;
+                page.value--; // Decrease page number and reload resources
             }
         };
 
         const goToNextPage = () => {
             if (page.value < last_page.value) {
-                page.value++;
+                page.value++; // Increase page number and reload resources
             }
         };
 
+        // Load resources on component mount
         onMounted(loadResources);
-        watch(page, loadResources);
 
         return {
             resources,
             page,
             last_page,
+            searchQuery,
+            filteredResources,
             confirmDeleteResource,
             goToPreviousPage,
             goToNextPage,
@@ -178,5 +202,18 @@ table {
 /* Add margin to buttons in action column */
 td .custom-button {
     margin-right: 5px; /* Adjust margin as needed */
+}
+
+/* Search input styles */
+.search-container {
+    margin-bottom: 15px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 </style>
