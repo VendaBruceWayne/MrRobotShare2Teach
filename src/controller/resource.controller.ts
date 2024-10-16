@@ -35,7 +35,7 @@ export const Resources = async (req: Request, res: Response) => {
         });
     }
 };
-
+ 
 // Create a new resource
 export const CreateResource = async (req: Request, res: Response) => {
     try {
@@ -50,6 +50,57 @@ export const CreateResource = async (req: Request, res: Response) => {
         });
     }
 };
+// Update report status of a resource
+export const UpdateReportStatus = async (req: Request, res: Response) => {
+    try {
+        const resourceId = parseInt(req.params.id, 10);
+        if (isNaN(resourceId)) {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
+        const { reported } = req.body; // Expecting a boolean value
+
+        const repository = getManager().getRepository(Resource);
+        const existingResource = await repository.findOne({ where: { id: resourceId } });
+
+        if (!existingResource) {
+            return res.status(404).json({ message: "Resource not found" });
+        }
+
+        // Update reported status
+        existingResource.reported = reported;
+
+        await repository.save(existingResource);
+
+        res.status(200).json(existingResource);
+    } catch (error) {
+        console.error("Error updating report status:", error);
+        res.status(500).json({ 
+            message: "Error updating report status", 
+            error: (error as Error).message 
+        });
+    }
+};
+
+// Fetch all reported resources
+export const GetReportedResources = async (req: Request, res: Response) => {
+    try {
+        const repository = getRepository(Resource);
+        const reportedResources = await repository.find({
+            where: { reported: true },
+            relations: ['user', 'user.role'], // Optional: include user details if needed
+        });
+
+        res.status(200).json(reportedResources);
+    } catch (error) {
+        console.error("Error fetching reported resources:", error);
+        res.status(500).json({ 
+            message: "Error fetching reported resources", 
+            error: (error as Error).message 
+        });
+    }
+};
+
 
 // Fetch a specific resource by ID
 export const GetResource = async (req: Request, res: Response) => {

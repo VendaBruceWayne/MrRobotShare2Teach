@@ -1,0 +1,6 @@
+//Prevents unecessary files from being copied into the container
+node_modules
+dist
+npm-debug.log
+Dockerfile
+doker-compose.yml

@@ -36,6 +36,9 @@ import {
     GetResource,
     Resources,
     UpdateResource,
+    GetReportedResources,
+    UpdateReportStatus
+
 } from "./controller/resource.controller";
 import {
     Upload,
@@ -102,6 +105,8 @@ export const routes = (router: Router) => {
     router.get("/api/resources/:id", AuthMiddleware, GetResource); // Get a resource by ID
     router.put("/api/resources/:id", AuthMiddleware, PermissionMiddleware('edit_resources'), UpdateResource); // Update a resource by ID
     router.delete("/api/resources/:id", AuthMiddleware, PermissionMiddleware('delete_resources'), DeleteResource); // Delete a resource by ID
+    router.put("/resources/:id/report", UpdateReportStatus);
+    router.get("/resources/reported", GetReportedResources);
 
     // File upload and moderation routes
     router.post("/api/upload", AuthMiddleware, PermissionMiddleware('doc_contribution'), Upload); // Upload a file (PDF)
@@ -141,7 +146,7 @@ router.delete('/api/faqs/:id', deleteFAQ);
  router.post("/api/modules", AuthMiddleware,PermissionMiddleware("modules"),createModule); 
 
 
-
+ 
 
     return router;
 };

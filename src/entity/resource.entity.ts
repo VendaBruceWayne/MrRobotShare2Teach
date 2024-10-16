@@ -23,7 +23,14 @@ export class Resource {
     moderationStatus!: 'pending' | 'approved' | 'rejected';
 
     @Column({ type: 'text', nullable: true }) // Use 'text' for longer comments
-    moderationComments!: string | null
+    moderationComments!: string | null;
+
+    // New field to track if the resource has been reported
+    @Column({ default: false }) // Default to false, indicating not reported
+    reported!: boolean;
+
+    @Column({ type: 'text', nullable: true }) // Optional comments about the report
+    reportComments!: string | null;
 
     @ManyToOne(() => User, user => user.resources)
     user!: User;  
